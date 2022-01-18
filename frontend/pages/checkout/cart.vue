@@ -86,7 +86,15 @@
                                 Телефон
                                 <span> *</span>
                             </label>
-                            <input v-model="userForm.phone" type="phone" placeholder="Введите телефон" required>
+                            <!--<input v-model="userForm.phone" type="phone" placeholder="Введите телефон" required>-->
+                            <VuePhoneNumberInput
+                                    placeholder="Введите телефон"
+                                    required
+                                    :only-countries="['RU','BY','UA']"
+                                    v-model="userForm.phone"
+                                    @update="updatePhone"
+                            />
+
                         </div>
                         <div class="basket__input">
                             <label>
@@ -103,7 +111,7 @@
                             <textarea v-model="userForm.comment" name="comment" cols="20" rows="5"
                                       placeholder="Комментарий" required></textarea>
                         </div>
-                        <button type="submit" class="basket__btn">
+                        <button type="submit" class="basket__btn" v-if="loading === false">
                             Отправить
                         </button>
                     </form>
@@ -121,6 +129,8 @@ import MenuMobile from '~/components/Menu/MenuMobile'
 import Menu from '~/components/Menu/Menu'
 import Vector from '~/components/Partials/Vector'
 import LeftMenu from '~/components/Menu/LeftMenu'
+import VuePhoneNumberInput from 'vue-phone-number-input';
+import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 
 
 export default {
@@ -129,6 +139,7 @@ export default {
         Menu,
         Vector,
         LeftMenu,
+        VuePhoneNumberInput
     },
     head: {
         bodyAttrs: {
@@ -142,7 +153,8 @@ export default {
             apiWebUrl: process.env.apiWebUrl,
             categories: [],
             userForm: {},
-            tPrice: this.totalPrice
+            tPrice: this.totalPrice,
+            loading: false
         };
     },
     computed: {
@@ -161,6 +173,12 @@ export default {
     },
 
     methods: {
+
+        updatePhone(params) {
+            console.log(params);
+            this.userForm.phoneDetails = params;
+        },
+
         doNotify(type, text){
             this.$notify({
                 type: type,
@@ -219,5 +237,29 @@ export default {
 </script>
 
 <style scoped>
+    div#MazPhoneNumberInput {
+        margin-left: 10px;
+        margin-bottom: 15px;
+        box-shadow: inset 0 0 5px rgb(0 0 0 / 38%);
+        width: 100%;
+        margin-right: 10px;
+    }
 
+    label.input-tel__label {
+        width: auto!important;
+        margin-left: 10px;
+    }
+
+    .country-selector__country-flag {
+        margin-left: 15px!important;
+    }
+
+    .input-tel.has-hint .input-tel__label[data-v-e59be3b4], .input-tel.has-value .input-tel__label[data-v-e59be3b4] {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        font-size: 11px;
+        width: auto;
+        margin-left: 10px;
+    }
 </style>

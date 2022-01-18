@@ -6,13 +6,15 @@ use App\Mail\OrderNotification;
 use App\Mail\OrderNotificationAdmin;
 use App\Models\Order\Order;
 use App\Models\Order\Orders;
+use App\Models\Order\ItemOrders;
 use App\Models\Product\OcProduct;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class OrderRepository
 {
-    protected $order, $orders;
+    protected $order, $orders, $itemOrders;
 
     /**
      * OrderRepository constructor.
@@ -20,7 +22,8 @@ class OrderRepository
      */
     public function __construct(
         Order $order,
-        Orders $orders
+        Orders $orders,
+        ItemOrders $itemOrders
     )
     {
         $this->order = $order;
@@ -33,14 +36,15 @@ class OrderRepository
             return $this->order->all();
         }
 
-        $columns = ['id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'created_at'];
+        $columns = ['id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'total_price', 'zone', 'created_at'];
 
         $length = $request->input('length');
         $column = $request->input('column'); //Index
         $dir = $request->input('dir');
         $searchValue = $request->input('search');
+        $searchByZone = $request->input('search_by_zone');
 
-        $query = $this->order->select('id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'created_at')
+        $query = $this->order->select('id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'total_price', 'zone', 'created_at')
             ->orderBy($columns[$column], $dir);
 
         if ($searchValue) {
@@ -53,15 +57,20 @@ class OrderRepository
             });
         }
 
+        if(isset($searchByZone) && !empty($searchByZone)) {
+            $query->where('zone', $searchByZone);
+        }
+
         $data = $query->paginate($length);
         $columns = [
+            ['width' => '33%', 'label' => 'Дата заказа',  'name' => 'created_at'],
             ['width' => '33%', 'label' => 'Id', 'name' => 'id'],
             ['width' => '33%', 'label' => 'Статус', 'name' => 'order_status'],
             ['width' => '33%', 'label' => 'Имя', 'name' => 'name'],
             ['width' => '33%', 'label' => 'Телефон', 'name' => 'phone'],
             ['width' => '33%', 'label' => 'Почта', 'name' => 'email'],
+            ['width' => '33%', 'label' => 'Сумма заказа', 'name' => 'total_price'],
             ['width' => '33%', 'label' => 'Комментарий', 'name' => 'comment'],
-            ['width' => '33%', 'label' => 'Дата заказа',  'name' => 'created_at'],
         ];
 
         // $statusClass = array (
@@ -76,7 +85,13 @@ class OrderRepository
             'columns' => $columns,
             //'statusClass' => $statusClass,
             'sortKey' => $sortKey,
-            'draw' => $request->input('draw')
+            'draw' => $request->input('draw'),
+            'stats' => [
+                'total' => $this->order->where('created_at', 'LIKE', date('Y-m').'%')->count(),
+                'white' => $this->order->where('zone', 'white')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
+                'yellow' => $this->order->where('zone', 'yellow')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
+                'red' => $this->order->where('zone', 'red')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
+            ]
         ];
     }
 
@@ -90,7 +105,7 @@ class OrderRepository
             return $this->orders->all();
         }
 
-        $columns = ['id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'created_at'];
+        $columns = ['id', 'order_id', 'product_id', 'name', 'phone', 'email', 'comment', 'status', 'created_at'];
 
         $length = $request->input('length');
         $column = $request->input('column'); //Index
@@ -112,6 +127,7 @@ class OrderRepository
         $data = $query->paginate($length);
         $columns = [
             ['width' => '33%', 'label' => 'Id', 'name' => 'id'],
+            ['width' => '33%', 'label' => 'Номер заказа', 'name' => 'order_id'],
             ['width' => '33%', 'label' => 'Имя', 'name' => 'name'],
             ['width' => '33%', 'label' => 'Телефон', 'name' => 'phone'],
             ['width' => '33%', 'label' => 'Почта', 'name' => 'email'],
@@ -166,7 +182,9 @@ class OrderRepository
             Mail::to($request['order']['email'])->send(new OrderNotification($request['order']));
             Mail::to(env('MAIL_ADMIN'))->send(new OrderNotificationAdmin($request['order']));
         }
-        $this->order->update(['status' => $request['order']['status']]);
+
+
+        Order::where('id', $orderId)->update(['status' => $request['order']['status'], 'created_at' => date('Y-m-d H:i:s')]);
     }
 
     public function deleteChecked($request)
@@ -183,7 +201,81 @@ class OrderRepository
         $checkedItems = $request->get('checkedItems');
 
         foreach ($checkedItems as $item) {
-            $this->orders->where('id', $item)->delete();
+            Orders::where('id', $item)->delete();
         }
     }
+
+
+    public function getItemOrders($request)
+    {
+        if ($request->input('client')) {
+            return $this->itemOrders->all();
+        }
+
+        $columns = ['id', 'buyer_name', 'buyer_phone', 'buyer_email', 'articles', 'total_price', 'zone', 'created_at'];
+
+        $length = $request->input('length');
+        $column = $request->input('column'); //Index
+        $dir = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = ItemOrders::select('id', 'buyer_name', 'buyer_phone', 'buyer_email', 'articles', 'total_price', 'zone', 'created_at')
+            ->orderBy($columns[$column], $dir);
+
+        if ($searchValue) {
+            $query->where(function ($query) use ($searchValue) {
+                $query->where('id', 'like', '%' . $searchValue . '%')
+                    ->orWhere('buyer_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('buyer_phone', 'like', '%' . $searchValue . '%')
+                    ->orWhere('buyer_email', 'like', '%' . $searchValue . '%');
+            });
+        }
+
+        $data = $query->paginate($length);
+        $columns = [
+            ['width' => '33%', 'label' => 'Дата заказа', 'name' => 'created_at'],
+            ['width' => '33%', 'label' => 'Номер заказа', 'name' => 'id'],
+            ['width' => '33%', 'label' => 'Перечень заказа', 'name' => 'articles'],
+            ['width' => '33%', 'label' => 'Сумма заказа', 'name' => 'total_price'],
+            ['width' => '33%', 'label' => 'Покупатель (Телефон)', 'name' => 'buyer_phone'],
+        ];
+
+        // $statusClass = array (
+        //     array('status' => 'inactive',   'badge' => 'kt-badge--danger'),
+        //     array('status' => 'active', 'badge' => 'kt-badge--success')
+        // );
+
+        $sortKey = 'id';
+
+        return [
+            'data' => $data,
+            'columns' => $columns,
+            //'statusClass' => $statusClass,
+            'sortKey' => $sortKey,
+            'draw' => $request->input('draw')
+        ];
+    }
+
+
+    public function setStatus($zone, $order_id) {
+        $order = $this->order->where('id', $order_id);
+        if(!$order->first()) {
+            return false;
+        }
+
+        $order->update(['zone' => $zone]);
+        return ['status' => 'success'];
+    }
+
+
+    public function edit($request, $order_id) {
+        $order = $this->order->where('id', $order_id)->update([
+            'name' => $request->order['name'],
+            'phone' => $request->order['phone'],
+            'email' => $request->order['email'],
+            'product_id' => serialize($request->products)
+        ]);
+        return ['status' => 'success'];
+    }
+
 }

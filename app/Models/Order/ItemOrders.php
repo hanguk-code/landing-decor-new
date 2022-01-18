@@ -6,24 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Product\Product;
 
-class Orders extends Model
+class ItemOrders extends Model
 {
-    public $table = 'orders';
+    public $table = 'item_orders';
 
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'product_id',
-        'order_id',
-        'name',
-        'phone',
-        'email',
-        'type',
-        'address',
-        'comments',
-        'tags'
+        'buyer_name',
+        'buyer_phone',
+        'buyer_email',
+        'zone',
+        'articles',
+        'total_price'
     ];
 
 }

@@ -18,6 +18,7 @@ Route::post('login', ['as' => 'login', 'uses' => 'LoginController@login']);
 Route::post('login', 'LoginController@login');
 Route::post('register', 'RegisterController@register');
 Route::apiResource('users', 'UserController');
+
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('user', 'AuthenticationController@user');
     Route::post('logout', 'LoginController@logout');
@@ -26,6 +27,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 });
 
 //Admin
+Route::get('adm/users', 'UserController@users');
+Route::get('adm/users/{id}', 'UserController@getUserData');
+Route::get('adm/users/{id}/orders', 'UserController@getUserOrders');
+Route::post('adm/users/{id}/update', 'UserController@UserDataUpdate');
+Route::post('adm/users/delete/checked', 'UserController@deleteChecked');
+
+
 Route::apiResource('adm/categories', 'CategoryController');
 Route::get('adm/categories/options/data', 'CategoryController@optionsData');
 Route::post('adm/categories/delete/checked', 'CategoryController@deleteChecked');
@@ -40,11 +48,18 @@ Route::post('adm/products/delete/checked', 'ProductController@deleteChecked');
 Route::post('adm/products/c/copy', 'ProductController@copy');
 
 Route::post('adm/orders/{id}/create', 'OrderController@sell');
+
+Route::post('adm/orders/{id}/edit', 'OrderController@edit');
+
 Route::apiResource('adm/orders', 'OrderController');
 Route::get('adm/orders-list', 'OrderController@ordersList');
+Route::get('adm/orders-list/{id}', 'OrderController@ordersListData');
+Route::get('adm/item-orders', 'OrderController@itemOrders');
 Route::post('adm/orders-orders/delete/checked', 'OrderController@deleteCheckedList');
+Route::post('adm/orders-orders-id/delete/checked', 'OrderController@deleteCheckedList');
 Route::get('adm/orders/options/data', 'OrderController@optionsData');
 Route::post('adm/orders/delete/checked', 'OrderController@deleteChecked');
+Route::get('adm/orders/{order_id}/set-status', 'OrderController@setStatus');
 
 Route::apiResource('adm/media', 'MediaController');
 Route::post('adm/media/sort', 'MediaController@sort');

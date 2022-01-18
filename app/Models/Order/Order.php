@@ -20,6 +20,8 @@ class Order extends Model
         'phone',
         'email',
         'comment',
+        'total_price',
+        'zone'
     ];
 
 }

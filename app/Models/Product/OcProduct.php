@@ -60,7 +60,13 @@ class OcProduct extends Model
         'status',
 
         'date_added',
-        'date_modified'
+        'date_modified',
+
+
+        'price_rub',
+        'price_euro',
+        'kurs',
+        'zone'
     ];
 
     // protected $casts = [

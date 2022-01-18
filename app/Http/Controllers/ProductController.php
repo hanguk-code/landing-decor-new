@@ -125,9 +125,7 @@ class ProductController extends Controller
      */
     public function reset(Request $request, $id)
     {
-        $this->productRepository->reset( $id);
-
-        return (new JResource(['status' => 'success', 'id' => request()->route('bouquets')]));
+        return (new JResource(['status' => 'success', 'data' => $this->productRepository->reset( $id)]));
     }
 
 }

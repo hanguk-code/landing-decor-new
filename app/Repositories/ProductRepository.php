@@ -8,6 +8,8 @@ use App\Models\Product\OcProduct;
 use App\Models\Category\OcCategory;
 use App\Models\Category\OcCategoryDescription;
 
+use App\Models\User\Users;
+
 //use App\Models\Reference\Tag;
 use App\Models\Attribute\OcAttribute;
 use App\Models\OcUrlAlias;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Order\Orders;
+use App\Models\Order\Order;
 
 class ProductRepository
 {
@@ -69,18 +72,20 @@ class ProductRepository
             return $this->product->all();
         }
 
-        $columns = ['sku', 'name', 'image', 'status', 'date_modified'];
+        $columns = ['sku', 'name', 'image', 'status', 'zone', 'price', 'date_modified'];
 
         $length = $request->input('length') ?? 10;
         $column = $request->input('column'); //Index
         $dir = $request->input('dir');
         $searchValue = $request->input('search');
         $searchByCategory = $request->input('search_by_category');
+        $searchByZone = $request->input('search_by_zone');
 
 //        $query = $this->product->with('description');
         $query = $this->product;
 
-        if(!isset($searchByCategory) || empty($searchByCategory)){
+
+        if (!isset($searchByCategory) || empty($searchByCategory)) {
             if (is_numeric($searchValue)) {
                 $query = $query->where('sku', 'like', $searchValue . '%');
 //                ->where(function ($query) use ($searchValue) {
@@ -99,10 +104,14 @@ class ProductRepository
         } else {
 
 
-                $query = $query->join('oc_product_to_category', 'oc_product_to_category.product_id', '=', 'oc_product.product_id')
+            $query = $query->join('oc_product_to_category', 'oc_product_to_category.product_id', '=', 'oc_product.product_id')
                 ->where('oc_product_to_category.category_id', $searchByCategory);
-                //$productsByCategory = OcProductToCategory::where('category_id', $sCategoryData->category_id)->get();
+            //$productsByCategory = OcProductToCategory::where('category_id', $sCategoryData->category_id)->get();
 
+        }
+
+        if (isset($searchByZone) || !empty($searchByZone)) {
+            $query = $query->where('zone', $searchByZone);
         }
 
 
@@ -112,17 +121,36 @@ class ProductRepository
             $query = $query->orderBy('sku', 'desc');
         }
 
+        $green = clone $query;
+        $blue = clone $query;
+        $white = clone $query;
+        $red = clone $query;
+        $siniy = clone $query;
+        $violet = clone $query;
+        $yellow = clone $query;
 
+        $price = clone $query;
+
+        $total = $query->count();
+        $total_price_all_products = $price->whereNotIn('zone', ['black'])->sum('price');
+        $red = $blue->where('zone', 'red')->count();
+        $siniy = $green->where('zone', 'siniy')->count();
+        $violet = $blue->where('zone', 'violet')->count();
+        $yellow = $green->where('zone', 'yellow')->count();
+        $blue = $blue->where('zone', 'blue')->count();
+        $green = $green->where('zone', 'green')->count();
+        $white = (int)$white->where('zone', 'white')->count() + (int)$blue + (int)$green;
         $data = $query->paginate($length);
-/*        if(!$productsByCategory) {
-            $data = $query->paginate($length);
-        } else {
-            foreach($productsByCategory as $prod) {
-                $data = [];
-                $prodId = $prod['product_id'];
-                array_push($data, OcProduct::where('product_id', $prodId)->first());
-            }
-        }*/
+
+        /*        if(!$productsByCategory) {
+                    $data = $query->paginate($length);
+                } else {
+                    foreach($productsByCategory as $prod) {
+                        $data = [];
+                        $prodId = $prod['product_id'];
+                        array_push($data, OcProduct::where('product_id', $prodId)->first());
+                    }
+                }*/
 
 
         $dataItem = [];
@@ -134,6 +162,8 @@ class ProductRepository
                 'image' => $item->image,
                 'name' => $item->description->name ?? '',
                 'status' => $item->status,
+                'zone' => $item->zone,
+                'price' => $item->price
 //                'dates' => $item->dates,
             ];
         }
@@ -143,7 +173,7 @@ class ProductRepository
             ['width' => '33%', 'label' => 'Артикул', 'name' => 'sku'],
             ['width' => '33%', 'label' => 'Фото', 'name' => 'image', 'type' => 'image'],
             ['width' => '33%', 'label' => 'Наименование', 'name' => 'name'],
-            ['width' => '33%', 'label' => 'Статус', 'name' => 'status'],
+            ['width' => '33%', 'label' => 'Цена', 'name' => 'price'],
 //            array('width' => '33%', 'label' => 'Даты', 'name' => 'dates')
         ];
 
@@ -153,6 +183,36 @@ class ProductRepository
         ];
 
         $sortKey = 'id';
+
+
+        if ((isset($searchValue) && !empty(($searchValue)))
+            || (isset($searchByCategory) && !empty($searchByCategory))
+            || (isset($searchByZone) && !empty($searchByZone))) {
+            return [
+                'data' => [
+                    'data' => $dataItem,
+                    'current_page' => $data->currentPage(),
+                    'last_page' => $data->lastPage(),
+                    'total' => $data->total(),
+                ],
+
+                'columns' => $columns,
+                'statusClass' => $statusClass,
+                'sortKey' => $sortKey,
+                'draw' => $request->input('draw'),
+                'stats' => [
+                    'total' => $total,
+                    'white' => $white,
+                    'blue' => $blue,
+                    'green' => $green,
+                    'red' => $red,
+                    'siniy' => $siniy,
+                    'violet' => $violet,
+                    'yellow' => $yellow,
+                    'total_price_all_products' => $total_price_all_products
+                ]
+            ];
+        }
 
         return [
             'data' => [
@@ -165,7 +225,18 @@ class ProductRepository
             'columns' => $columns,
             'statusClass' => $statusClass,
             'sortKey' => $sortKey,
-            'draw' => $request->input('draw')
+            'draw' => $request->input('draw'),
+            'stats' => [
+                'total' => $total,
+                'white' => $white,
+                'blue' => $blue,
+                'green' => $green,
+                'red' => $red,
+                'siniy' => $siniy,
+                'violet' => $violet,
+                'yellow' => $yellow,
+                'total_price_all_products' => $total_price_all_products
+            ]
         ];
     }
 
@@ -251,7 +322,15 @@ class ProductRepository
     public function update(array $request, int $productId)
     {
         $product = $this->product->find($productId);
-        $product->update($request['product']);
+        $productData = $request['product'];
+
+        if($productData['zone'] == 'black' || $productData['zone'] == 'white') {
+            $productData['status'] = 1;
+        } else {
+            $productData['status'] = 0;
+        }
+
+        $product->update($productData);
         $product->description()->update($request['product']['description']);
         $urlAlias = OcUrlAlias::where('query', DB::raw('\'product_id=' . $product->product_id . '\''))->first();
 
@@ -500,32 +579,67 @@ class ProductRepository
         return $product;
     }
 
-    public function rcopy($src, $dst) {
+    public function rcopy($src, $dst)
+    {
         if (is_dir($src)) {
-            if(!file_exists($dst)) {
+            if (!file_exists($dst)) {
                 mkdir($dst);
             }
 
             $files = scandir($src);
             foreach ($files as $file)
                 if ($file != "." && $file != "..") $this->rcopy("$src/$file", "$dst/$file");
-        }
-        else if (file_exists($src)) copy($src, $dst);
+        } else if (file_exists($src)) copy($src, $dst);
     }
 
 
-    public function sell($id) {
+    public function sell($id)
+    {
         OcProduct::where('product_id', $id)->update([
             'manufacturer_id' => 8,
+            'zone' => 'black'
         ]);
         return;
     }
 
-    public function reset($id) {
+    public function reset($id)
+    {
+
         OcProduct::where('product_id', $id)->update([
             'manufacturer_id' => 0,
+            'zone' => 'white'
         ]);
+
+        $product = OcProduct::where('product_id', $id)->first();
+
+        $orders = Orders::where('product_id', $id)->get();
+
+        foreach ($orders as $order) {
+            $user = Users::where('phone', $order->phone);
+            if ($user->exists()) {
+                $orderList = Order::where('phone', $user->first()['phone'])->get();
+                foreach($orderList as $order) {
+                    $product_ids = unserialize($order->product_id);
+                    $key = array_search($id, $product_ids);
+                    unset($product_ids[$key]);
+                    $order->product_id = serialize($product_ids);
+                    if($order->total_price > 0) {
+                        $order->total_price = $order->total_price - (int)$product->price;
+                    }
+                    $order->update();
+
+                    if($order->total_price == 0) {
+                        $order->delete();
+                    }
+                }
+                $user->update([
+                    'number_of_purchases' => $user->first()['number_of_purchases'] - 1,
+                    'total_sum' => (int)$user->first()['total_sum'] - (int)$product->price
+                ]);
+            }
+        }
         Orders::where('product_id', $id)->delete();
+
         return;
     }
 

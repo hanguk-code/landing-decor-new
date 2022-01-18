@@ -56,7 +56,7 @@ export default {
 
             breadcrumbs: [{
                 url: '/products/new',
-                title: 'Новинки товара'
+                title: 'Новые предметы нашей коллекции'
             }],
             products: [],
 
