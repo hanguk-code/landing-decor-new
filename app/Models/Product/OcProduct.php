@@ -66,7 +66,8 @@ class OcProduct extends Model
         'price_rub',
         'price_euro',
         'kurs',
-        'zone'
+        'zone',
+        'comment'
     ];
 
     // protected $casts = [

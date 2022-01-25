@@ -41,6 +41,7 @@ Route::post('adm/categories/delete/checked', 'CategoryController@deleteChecked')
 Route::apiResource('adm/products', 'ProductController');
 Route::patch('adm/products/{id}/sell', 'ProductController@sell');
 Route::patch('adm/products/{id}/reset', 'ProductController@reset');
+Route::patch('adm/products/{id}/set-zone', 'ProductController@setZone');
 Route::delete('adm/products/attribute/delete/{id}/{attr}', 'ProductController@destroyProductAttribute');
 Route::post('adm/products/gallery/save', 'ProductController@galleryStore');
 Route::get('adm/products/options/data', 'ProductController@optionsData');
@@ -80,3 +81,23 @@ Route::get('type/{url}', 'Web\ProductController@type')->where('url', '(.*)');
 Route::get('search/products', 'Web\ProductController@search');
 
 Route::post('order', 'Web\OrderController@order');
+
+
+
+Route::get('adm/areas/index', 'AreaController@index');
+Route::get('adm/areas/{id}/delete', 'AreaController@delete');
+Route::post('adm/areas/create', 'AreaController@create');
+
+Route::get('adm/statistic/get', 'AreaController@statistic');
+Route::post('adm/statistic/set', 'AreaController@setStatistic');
+
+
+
+Route::post('adm/finances/articles/add', 'FinanceController@addArticle');
+Route::post('adm/finances/expenses/add', 'FinanceController@addExpense');
+Route::get('adm/finances/articles/get', 'FinanceController@getArticles');
+Route::get('adm/finances/expenses/get', 'FinanceController@getExpenses');
+Route::get('adm/finances/articles/{id}/delete', 'FinanceController@deleteArticle');
+Route::get('adm/finances/expenses/{id}/delete', 'FinanceController@deleteExpense');
+
+Route::get('adm/finances/orders/get', 'FinanceController@getOrders');

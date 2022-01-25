@@ -128,17 +128,19 @@ class ProductRepository
         $siniy = clone $query;
         $violet = clone $query;
         $yellow = clone $query;
+        $black = clone $query;
 
         $price = clone $query;
 
         $total = $query->count();
         $total_price_all_products = $price->whereNotIn('zone', ['black'])->sum('price');
-        $red = $blue->where('zone', 'red')->count();
-        $siniy = $green->where('zone', 'siniy')->count();
-        $violet = $blue->where('zone', 'violet')->count();
-        $yellow = $green->where('zone', 'yellow')->count();
+        $red = $red->where('zone', 'red')->count();
+        $siniy = $siniy->where('zone', 'siniy')->count();
+        $violet = $violet->where('zone', 'violet')->count();
+        $yellow = $yellow->where('zone', 'yellow')->count();
         $blue = $blue->where('zone', 'blue')->count();
         $green = $green->where('zone', 'green')->count();
+        $black = $black->where('zone', 'black')->count();
         $white = (int)$white->where('zone', 'white')->count() + (int)$blue + (int)$green;
         $data = $query->paginate($length);
 
@@ -209,6 +211,7 @@ class ProductRepository
                     'siniy' => $siniy,
                     'violet' => $violet,
                     'yellow' => $yellow,
+                    'black' => $black,
                     'total_price_all_products' => $total_price_all_products
                 ]
             ];
@@ -235,6 +238,7 @@ class ProductRepository
                 'siniy' => $siniy,
                 'violet' => $violet,
                 'yellow' => $yellow,
+                'black' => $black,
                 'total_price_all_products' => $total_price_all_products
             ]
         ];
@@ -324,11 +328,11 @@ class ProductRepository
         $product = $this->product->find($productId);
         $productData = $request['product'];
 
-        if($productData['zone'] == 'black' || $productData['zone'] == 'white') {
+/*        if($productData['zone'] == 'black' || $productData['zone'] == 'white') {
             $productData['status'] = 1;
         } else {
             $productData['status'] = 0;
-        }
+        }*/
 
         $product->update($productData);
         $product->description()->update($request['product']['description']);

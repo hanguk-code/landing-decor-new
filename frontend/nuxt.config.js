@@ -13,7 +13,7 @@ export default {
     server: {
         port: 3000, // default: 3000
         // host: '0.0.0.0', // default: localhost
-        host: '127.0.0.1', // default: localhost
+        host: '127.0.0.1' // default: localhost
     },
     /*
     ** Headers of the page
@@ -124,8 +124,8 @@ export default {
     ** See https://axios.nuxtjs.org/options
     */
     axios: {
-        baseURL: process.env.API_URL,
-        // baseURL: 'http://192.168.0.107:8000/api',
+	baseURL: process.env.API_URL
+        //baseURL: 'http://139.162.135.193:81/api',
         // retry: { retries: 2 },
     },
     /*

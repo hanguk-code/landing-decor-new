@@ -142,6 +142,7 @@ export default {
     props: ['product', 'relatedProducts'],
 
     async fetch() {
+        await this.setStatistic();
     },
 
     mounted() {
@@ -151,6 +152,17 @@ export default {
     },
 
     methods: {
+        async setStatistic() {
+            let days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+            this.$axios.post(process.env.apiWebUrl + `/adm/statistic/set`, {
+                type: "product",
+                product_id: this.product.id,
+                price: this.product.price,
+                date_viewed: days[(new Date()).getDay()],
+                watch_time: (new Date()).getHours()
+            });
+        },
+
         imageUrlAlt(event) {
             event.target.src = this.apiWebUrl + "/image/no_image.jpg"
         },

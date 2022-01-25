@@ -116,11 +116,10 @@ class OrderController extends Controller
         $data = (object) array_merge((array) $request, (array) $product_ids);
         $product = OcProduct::select('product_id', 'price')->where('product_id', $id)->first();
 
-
         Order::create([
             'product_id' => $data->product_id,
             'name' => $data->name,
-            'phone' => $data->phone,
+            'phone' => $data->phoneDetails['formattedNumber'],
             'email' => $data->email,
             'comments' => $data->comments,
             'total_price' => $product->price,
@@ -132,7 +131,7 @@ class OrderController extends Controller
         Orders::create([
             'product_id' => $id,
             'name' => $data->name,
-            'phone' => $data->phone,
+            'phone' => $data->phoneDetails['formattedNumber'],
             'email' => $data->email,
             'comments' => $data->comments,
             'total_price' => $product->price,
@@ -146,7 +145,7 @@ class OrderController extends Controller
         if(!$user->exists()) {
             $user = Users::create([
                 'name' => $data->name,
-                'phone' => $data->phone,
+                'phone' => $data->phoneDetails['formattedNumber'],
                 'email' => $data->email,
                 'total_sum' => $product->price,
                 'number_of_purchases' => 1

@@ -90,7 +90,7 @@
                             <VuePhoneNumberInput
                                     placeholder="Введите телефон"
                                     required
-                                    :only-countries="['RU','BY','UA']"
+                                    :only-countries="['RU','BY','UA','AM','KZ']"
                                     v-model="userForm.phone"
                                     @update="updatePhone"
                             />

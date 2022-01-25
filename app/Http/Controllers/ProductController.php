@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use App\Http\Resources\JResource;
 use App\Repositories\ProductRepository;
+use App\Models\Product\OcProduct;
 
 /**
  *
@@ -126,6 +127,15 @@ class ProductController extends Controller
     public function reset(Request $request, $id)
     {
         return (new JResource(['status' => 'success', 'data' => $this->productRepository->reset( $id)]));
+    }
+
+    public function setZone(Request $request, $id) {
+        if($request->zone == "black" || $request->zone == "white") {
+            OcProduct::where('product_id', $id)->update(['zone' => $request->zone, 'status' => 1]);
+        } else {
+            OcProduct::where('product_id', $id)->update(['zone' => $request->zone, 'status' => 0]);
+        }
+        return (new JResource(['status' => 'success']));
     }
 
 }

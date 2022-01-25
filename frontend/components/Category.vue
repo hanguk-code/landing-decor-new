@@ -129,7 +129,7 @@
 
                     <div class="product" v-for="product in products" v-if="subCategories.length < 1">
                         <div class="product__content">
-                            <i :class="'pos-' + product.jan" v-if="product.jan && product.upc && !product.archive"></i>
+                            <i :class="'pos-' + product.jan + ' ' + product.upc"  v-if="product.jan && product.upc && !product.archive"></i>
                             <n-link :to="product.url">
                                 <img :src="apiWebUrl+'/image/'+product.image_url"
                                      :data-image="apiWebUrl+'/image/'+product.image_url"
@@ -198,7 +198,7 @@ export default {
         };
     },
 
-    fetch() {
+    async fetch() {
         let splitUrl = this.$route.params.pathMatch.split('/')
 
         if (splitUrl[0]) {
@@ -206,6 +206,7 @@ export default {
         } else {
             this.mainCat = splitUrl[1]
         }
+        await this.setStatistic();
     },
 
     mounted() {
@@ -213,6 +214,16 @@ export default {
     },
 
     methods: {
+        async setStatistic() {
+            let days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+            this.$axios.post(process.env.apiWebUrl + `/adm/statistic/set`, {
+                type: "category",
+                category: this.breadcrumbs[(this.breadcrumbs).length - 1].name,
+                date_viewed: days[(new Date()).getDay()],
+                watch_time: (new Date()).getHours()
+            });
+        },
+
         imageUrlAlt(event) {
             event.target.src = this.apiWebUrl + "/image/no_image.jpg"
         },
