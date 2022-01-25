@@ -9,6 +9,7 @@ use App\Models\Areas;
 use App\Models\Order\Order;
 use App\Models\BrowsingHistory;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AreaController extends Controller
 {
@@ -119,7 +120,7 @@ class AreaController extends Controller
 
         $hours = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
         foreach ($hours as $hour) {
-            $statistic['chart_time'][$hour . ":00"] = isset($month) ? BrowsingHistory::where('watch_time', $hour)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('watch_time', $hour)->count();
+            $statistic['chart_time'][$hour . ":00"] = isset($month) ? BrowsingHistory::where('watch_time', $hour)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('watch_time', $hour)->whereBetween('created_at',  [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
         }
 
         $priceList = [
@@ -143,13 +144,13 @@ class AreaController extends Controller
             if($key == 3) {
                 $statistic['chart_products'][$key] = isset($month) ? BrowsingHistory::where('type', 'product')->where('price', '>=', $value['min'])->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('type', 'product')->where('price', '>=', $value['min'])->count();
             } else {
-                $statistic['chart_products'][$key] = isset($month) ? BrowsingHistory::where('type', 'product')->whereBetween('price', [$value['min'], $value['max']])->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('type', 'product')->whereBetween('price', [$value['min'], $value['max']])->count();
+                $statistic['chart_products'][$key] = isset($month) ? BrowsingHistory::where('type', 'product')->whereBetween('price', [$value['min'], $value['max']])->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('type', 'product')->whereBetween('price', [$value['min'], $value['max']])->whereBetween('created_at',  [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
             }
         }
 
         $days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
         foreach ($days as $day) {
-            $statistic['chart_date'][$day] = isset($month) ? BrowsingHistory::where('date_viewed', $day)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('date_viewed', $day)->where('week(`created_at`, 1)', '=', 'week(now(), 1)')->count();
+            $statistic['chart_date'][$day] = isset($month) ? BrowsingHistory::where('date_viewed', $day)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('date_viewed', $day)->whereBetween('created_at',  [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
         }
 
         return (new JResource([

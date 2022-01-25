@@ -308,7 +308,7 @@ class ProductRepository
                     'breadcrumbs' => $breadcrumbs,
                     'gallery' => $gallery,
                     'attributes' => $attribute,
-                    'archive' => $product['manufacturer_id'] === 8,
+                    'archive' => $product['zone'] === 'black',
                     'jan' => $product['jan'],
                     'upc' => $product['upc'],
                     'zone' => $product['zone']
@@ -365,7 +365,6 @@ class ProductRepository
                 });
             }
             $productCat = $productCat
-                ->where('manufacturer_id', 0)
                 ->where('status', true)
                 ->orderby('date_modified', 'desc')->paginate($length);
 
@@ -404,7 +403,7 @@ class ProductRepository
                     'jan' => $productItemCat['jan'],
                     'price' => self::priceFormat($productItemCat['price']),
                     'article' => $productItemCat['sku'],
-                    'archive' => $productItemCat['manufacturer_id'] === 8,
+                    'archive' => $productItemCat['zone'] === 'black',
                 ];
             }
 

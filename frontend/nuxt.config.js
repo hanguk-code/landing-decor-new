@@ -11,7 +11,7 @@ export default {
         appLocale: process.env.APP_LOCALE
     },
     server: {
-        port: process.env.NUXT_PORT, // default: 3000
+        port: process.env.NUXT_PORT || 3000, // default: 3000
         // host: '0.0.0.0', // default: localhost
         host: '127.0.0.1' // default: localhost
     },
