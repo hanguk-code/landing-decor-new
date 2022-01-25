@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="product-select">
-                    <i :class="'sticker-pos-' + product.jan + ' ' + product.upc " v-if="product.jan && product.upc && !archive"></i>
+                    <i :class="product.zone === 'yellow' ? 'sticker-pos-' + product.jan + ' reserve' : 'sticker-pos-' + product.jan" v-if="product.jan"></i>
                     <i class="prod" v-if="archive"></i>
                     <div class="slider">
                         <div class="slider__zoom">

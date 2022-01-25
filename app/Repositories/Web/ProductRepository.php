@@ -311,6 +311,7 @@ class ProductRepository
                     'archive' => $product['manufacturer_id'] === 8,
                     'jan' => $product['jan'],
                     'upc' => $product['upc'],
+                    'zone' => $product['zone']
                 ];
 
                 //dd($productData);

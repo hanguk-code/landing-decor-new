@@ -149,7 +149,7 @@ class AreaController extends Controller
 
         $days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
         foreach ($days as $day) {
-            $statistic['chart_date'][$day] = isset($month) ? BrowsingHistory::where('date_viewed', $day)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('date_viewed', $day)->count();
+            $statistic['chart_date'][$day] = isset($month) ? BrowsingHistory::where('date_viewed', $day)->where('created_at', 'LIKE', '%'.$month.'%')->count() : BrowsingHistory::where('date_viewed', $day)->where('week(`created_at`, 1)', '=', 'week(now(), 1)')->count();
         }
 
         return (new JResource([

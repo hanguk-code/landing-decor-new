@@ -72,7 +72,7 @@ class ProductRepository
             return $this->product->all();
         }
 
-        $columns = ['sku', 'name', 'image', 'status', 'zone', 'price', 'date_modified'];
+        $columns = ['sku', 'name', 'image', 'status', 'zone', 'price', 'price_rub', 'date_modified'];
 
         $length = $request->input('length') ?? 10;
         $column = $request->input('column'); //Index
@@ -165,7 +165,8 @@ class ProductRepository
                 'name' => $item->description->name ?? '',
                 'status' => $item->status,
                 'zone' => $item->zone,
-                'price' => $item->price
+                'price' => $item->price,
+                'price_rub' => $item->price_rub
 //                'dates' => $item->dates,
             ];
         }
@@ -175,7 +176,9 @@ class ProductRepository
             ['width' => '33%', 'label' => 'Артикул', 'name' => 'sku'],
             ['width' => '33%', 'label' => 'Фото', 'name' => 'image', 'type' => 'image'],
             ['width' => '33%', 'label' => 'Наименование', 'name' => 'name'],
-            ['width' => '33%', 'label' => 'Цена', 'name' => 'price'],
+            ['width' => '33%', 'label' => 'Статус', 'name' => 'status'],
+            ['width' => '33%', 'label' => 'Цена закупки', 'name' => 'price_rub'],
+            ['width' => '33%', 'label' => 'Цена продажи', 'name' => 'price'],
 //            array('width' => '33%', 'label' => 'Даты', 'name' => 'dates')
         ];
 
