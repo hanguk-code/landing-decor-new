@@ -60,6 +60,7 @@ class ProductRepository
         $products = $this->product
             ->with('description')
             ->where('status', true)
+            ->where('zone', '!=', 'black')
             ->orderBy('date_modified', 'desc')
             ->paginate($limit);
 
@@ -83,6 +84,7 @@ class ProductRepository
             ->with('description')
             ->where('upc', 'new')
             ->where('status', true)
+            ->where('zone', '!=', 'black')
             ->orderBy('upc_date', 'desc')
             ->limit($limit)
             ->get();
@@ -99,6 +101,7 @@ class ProductRepository
                     return $query->where('tag', $product->description->tag);
                 })
                 ->where('status', true)
+                ->where('zone', '!=', 'black')
                 ->paginate(24);
         });
 
@@ -122,6 +125,7 @@ class ProductRepository
             ->where('upc', 'new')
             ->where('jan', '>', 0)
             ->where('status', true)
+            ->where('zone', '!=', 'black')
             ->orderBy('upc_date', 'desc')
             ->paginate($length);
 
@@ -615,7 +619,7 @@ class ProductRepository
                 });
         }
 
-        return self::parseProducts($productQuery->where('status', true)->limit($limit)->get());
+        return self::parseProducts($productQuery->where('status', true)->where('zone', '!=', 'black')->limit($limit)->get());
     }
 
     /**

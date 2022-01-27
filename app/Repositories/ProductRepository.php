@@ -599,16 +599,6 @@ class ProductRepository
         } else if (file_exists($src)) copy($src, $dst);
     }
 
-
-    public function sell($id)
-    {
-        OcProduct::where('product_id', $id)->update([
-            'manufacturer_id' => 8,
-            'zone' => 'black'
-        ]);
-        return;
-    }
-
     public function reset($id)
     {
 

@@ -116,6 +116,11 @@ class OrderController extends Controller
         $data = (object) array_merge((array) $request, (array) $product_ids);
         $product = OcProduct::select('product_id', 'price')->where('product_id', $id)->first();
 
+        OcProduct::where('product_id', $id)->update([
+            'manufacturer_id' => 8,
+            'zone' => 'black'
+        ]);
+
         Order::create([
             'product_id' => $data->product_id,
             'name' => $data->name,
