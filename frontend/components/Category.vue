@@ -130,7 +130,7 @@
                     <div class="product" v-for="product in products" v-if="subCategories.length < 1">
                         <div class="product__content">
                             <i :class="product.zone === 'yellow' ? 'pos-2 reserve' : 'pos-' + product.jan" v-if="product.jan && product.zone === 'yellow' || product.jan && product.upc "></i>
-                            <i class="prod prod-preview" v-if="product.zone === 'black'"></i>
+                            <i class="prod prod-preview" v-if="product.zone === 'black'" style="display: block;left: 135px;top: 130px;"></i>
                             <n-link :to="product.url">
                                 <img :src="apiWebUrl+'/image/'+product.image_url"
                                      :data-image="apiWebUrl+'/image/'+product.image_url"
@@ -276,5 +276,9 @@ export default {
 </script>
 
 <style scoped>
-
+    i.prod.prod-preview {
+        display: block;
+        left: 135px;
+        top: 130px;
+    }
 </style>

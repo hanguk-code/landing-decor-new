@@ -130,7 +130,7 @@ class ProductController extends Controller
     }
 
     public function setZone(Request $request, $id) {
-        if($request->zone == "black" || $request->zone == "white") {
+        if($request->zone == "black" || $request->zone == "white" || $request->zone == "yellow") {
             OcProduct::where('product_id', $id)->update(['zone' => $request->zone, 'status' => 1]);
         } else {
             OcProduct::where('product_id', $id)->update(['zone' => $request->zone, 'status' => 0]);

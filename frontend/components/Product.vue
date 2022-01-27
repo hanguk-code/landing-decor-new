@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="product-select">
-                    <i :class="product.zone === 'yellow' ? 'sticker-pos-' + product.jan + ' reserve' : 'sticker-pos-' + product.jan" v-if="product.jan"></i>
-                    <i class="prod" v-if="archive"></i>
+                    <i :class="product.zone === 'yellow' ? 'sticker-pos-2 reserve' : 'sticker-pos-' + product.jan"></i>
+                    <i class="prod" v-if="product.zone === 'black'"></i>
                     <div class="slider">
                         <div class="slider__zoom">
                             <a ref="mainPhotoHref" data-fancybox="gallery"
