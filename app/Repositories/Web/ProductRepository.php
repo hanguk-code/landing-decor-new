@@ -408,6 +408,7 @@ class ProductRepository
                     'price' => self::priceFormat($productItemCat['price']),
                     'article' => $productItemCat['sku'],
                     'archive' => $productItemCat['zone'] === 'black',
+                    'zone' => $productItemCat['zone']
                 ];
             }
 

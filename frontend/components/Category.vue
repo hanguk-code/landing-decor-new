@@ -129,7 +129,8 @@
 
                     <div class="product" v-for="product in products" v-if="subCategories.length < 1">
                         <div class="product__content">
-                            <i :class="'pos-' + product.jan + ' ' + {'reserve': product.zone === 'yellow'}"  v-if="product.jan"></i>
+                            <i :class="product.zone === 'yellow' ? 'pos-2 reserve' : 'pos-' + product.jan" v-if="product.jan && product.zone === 'yellow' || product.jan && product.upc "></i>
+                            <i class="prod prod-preview" v-if="product.zone === 'black'"></i>
                             <n-link :to="product.url">
                                 <img :src="apiWebUrl+'/image/'+product.image_url"
                                      :data-image="apiWebUrl+'/image/'+product.image_url"

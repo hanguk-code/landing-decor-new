@@ -77,11 +77,11 @@
                         <span class="product-select__price">
 							{{ product.price }} руб.
 						</span>
-                        <a href="#" class="product-select__link" @click="addToCart" v-if="!archive && product.upc !== 'reserve'">
+                        <a href="#" class="product-select__link" @click="addToCart" v-if="product.zone !== 'yellow' && product.zone !== 'black'">
                             Добавить в корзину
                         </a>
 
-                        <a href="#" class="product-select__link" v-if="product.upc === 'reserve'" style="background: url('http://web.archive.org/web/20180714224802im_/http://decor-retro.ru/catalog/view/theme/consta/i/button_buy1.png') no-repeat scroll 0 0 rgba(0, 0, 0, 0);width: 350px;
+                        <a href="#" class="product-select__link" v-if="product.zone === 'yellow'" style="background: url('http://web.archive.org/web/20180714224802im_/http://decor-retro.ru/catalog/view/theme/consta/i/button_buy1.png') no-repeat scroll 0 0 rgba(0, 0, 0, 0);width: 350px;
     padding-left: 0 !important;
     font-size: 18px;
     text-align: center;">
