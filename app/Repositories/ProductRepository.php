@@ -133,7 +133,8 @@ class ProductRepository
         $price = clone $query;
 
         $total = $query->count();
-        $total_price_all_products = $price->whereNotIn('zone', ['black'])->sum('price');
+        $total_price_all_products = number_format($price->whereNotIn('zone', ['black'])->sum('price'));
+        $price_rub_all_products = number_format($price->whereNotIn('zone', ['black'])->sum('price_rub'));
         $red = $red->where('zone', 'red')->count();
         $siniy = $siniy->where('zone', 'siniy')->count();
         $violet = $violet->where('zone', 'violet')->count();
@@ -215,7 +216,8 @@ class ProductRepository
                     'violet' => $violet,
                     'yellow' => $yellow,
                     'black' => $black,
-                    'total_price_all_products' => $total_price_all_products
+                    'total_price_all_products' => $total_price_all_products,
+                    'price_rub_all_products' => $price_rub_all_products
                 ]
             ];
         }
@@ -242,7 +244,8 @@ class ProductRepository
                 'violet' => $violet,
                 'yellow' => $yellow,
                 'black' => $black,
-                'total_price_all_products' => $total_price_all_products
+                'total_price_all_products' => $total_price_all_products,
+                'price_rub_all_products' => $price_rub_all_products
             ]
         ];
     }

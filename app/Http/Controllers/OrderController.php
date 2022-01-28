@@ -127,10 +127,11 @@ class OrderController extends Controller
             'phone' => $data->phoneDetails['formattedNumber'],
             'email' => $data->email,
             'comments' => $data->comments,
-            'total_price' => $product->price,
+            'total_price' => $data->price,
             'type' => $data->type,
             'address' => $data->address,
-            'tags' => $data->tags
+            'tags' => $data->tags,
+            'created_at' => $data->date
 
         ]);
         Orders::create([
@@ -139,7 +140,7 @@ class OrderController extends Controller
             'phone' => $data->phoneDetails['formattedNumber'],
             'email' => $data->email,
             'comments' => $data->comments,
-            'total_price' => $product->price,
+            'total_price' => $data->price,
             'type' => $data->type,
             'address' => $data->address,
             'tags' => $data->tags
@@ -152,12 +153,13 @@ class OrderController extends Controller
                 'name' => $data->name,
                 'phone' => $data->phoneDetails['formattedNumber'],
                 'email' => $data->email,
-                'total_sum' => $product->price,
+                'total_sum' => $data->price,
+                'address' => $data->address,
                 'number_of_purchases' => 1
             ]);
         } else {
             $user = $user->first();
-            $user->total_sum += $product->price;
+            $user->total_sum += $data->price;
             $user->number_of_purchases += 1;
             $user->update();
         }
