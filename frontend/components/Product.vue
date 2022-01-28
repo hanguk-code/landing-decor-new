@@ -15,7 +15,7 @@
             <div class="col-12">
                 <div class="product-select">
                     <i :class="product.zone === 'yellow' ? 'sticker-pos-2 reserve' : 'sticker-pos-' + product.jan"></i>
-                    <i class="prod" v-if="product.zone === 'black'"></i>
+                    <i class="prod prod-preview prod-preview-card" v-if="product.zone === 'black'"></i>
                     <div class="slider">
                         <div class="slider__zoom">
                             <a ref="mainPhotoHref" data-fancybox="gallery"
@@ -299,5 +299,8 @@ export default {
 </script>
 
 <style scoped>
-
+    i.prod.prod-preview.prod-preview-card {
+        top: 350px;
+        left: 370px;
+    }
 </style>

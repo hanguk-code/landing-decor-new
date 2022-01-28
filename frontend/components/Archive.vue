@@ -13,7 +13,7 @@
                     <div class="product" v-for="product in products">
                         <div class="product__content">
                             <n-link :to="product.url">
-                                <i class="archive"></i>
+                                <i class="prod prod-preview"></i>
                                 <img :src="apiWebUrl+'/image/'+product.image_url" alt="" class="zoom_03"
                                      :data-image="apiWebUrl+'/image/'+product.image_url"
                                      :data-zoom-image="apiWebUrl+'/image/'+product.image_url">
@@ -119,5 +119,9 @@ export default {
 </script>
 
 <style scoped>
-
+    i.prod.prod-preview {
+        display: block;
+        left: 135px;
+        top: 130px;
+    }
 </style>

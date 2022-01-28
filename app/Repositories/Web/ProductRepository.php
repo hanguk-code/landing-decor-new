@@ -370,6 +370,7 @@ class ProductRepository
             }
             $productCat = $productCat
                 ->where('status', true)
+                ->where('zone', '!=', 'black')
                 ->orderby('date_modified', 'desc')->paginate($length);
 
             $productCatData = [];
