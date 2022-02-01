@@ -169,6 +169,8 @@
                         </div>
                     </div>
 
+                    <div v-html="category.seo_text"> TEEEEEEEEST</div>
+
                     <div
                         v-observe-visibility="currentPage !== lastPage ? visibilityChanged : false"
                     ></div>
@@ -186,6 +188,7 @@ export default {
     data() {
         return {
             products: [],
+            category: [],
             breadcrumbs: [],
             apiWebUrl: process.env.apiWebUrl,
 
@@ -221,6 +224,7 @@ export default {
             }
 
             this.breadcrumbs = data.data.breadcrumbs
+            this.category = data.data.category
 
             this.configPagination(data.data.pagination);
 

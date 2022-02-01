@@ -157,6 +157,9 @@
                     </div>
 
 
+                    <div v-html="category.seo_text"></div>
+
+
                     <div v-observe-visibility="currentPage !== lastPage ? visibilityChanged : false"></div>
 
                 </div>

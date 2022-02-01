@@ -36,6 +36,7 @@ class OcCategory extends Model
 
         'date_added',
         'date_modified',
+        'seo_text'
     ];
 
      protected $appends = ['dates'];
