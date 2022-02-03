@@ -67,7 +67,9 @@ class OcProduct extends Model
         'price_euro',
         'kurs',
         'zone',
-        'comment'
+        'comment',
+        'amount_of_discount',
+        'date_zakup'
     ];
 
     // protected $casts = [

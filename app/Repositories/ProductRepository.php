@@ -129,6 +129,7 @@ class ProductRepository
         $violet = clone $query;
         $yellow = clone $query;
         $black = clone $query;
+        $grey = clone $query;
 
         $price = clone $query;
 
@@ -142,6 +143,7 @@ class ProductRepository
         $blue = $blue->where('zone', 'blue')->count();
         $green = $green->where('zone', 'green')->count();
         $black = $black->where('zone', 'black')->count();
+        $grey = $grey->where('zone', 'grey')->count();
         $white = (int)$white->where('zone', 'white')->count() + (int)$blue + (int)$green;
         $data = $query->paginate($length);
 
@@ -216,6 +218,7 @@ class ProductRepository
                     'violet' => $violet,
                     'yellow' => $yellow,
                     'black' => $black,
+                    'grey' => $grey,
                     'total_price_all_products' => $total_price_all_products,
                     'price_rub_all_products' => $price_rub_all_products
                 ]
@@ -244,6 +247,7 @@ class ProductRepository
                 'violet' => $violet,
                 'yellow' => $yellow,
                 'black' => $black,
+                'grey' => $grey,
                 'total_price_all_products' => $total_price_all_products,
                 'price_rub_all_products' => $price_rub_all_products
             ]
@@ -321,6 +325,7 @@ class ProductRepository
         foreach ($product->gallery as $key => $image) {
             $product->gallery[$key]['image'] = env('API_WEB_URL') . '/image/' . $product->gallery[$key]['image'];
         }
+
 
         return $product;
     }

@@ -11,6 +11,7 @@ use App\Models\Product\OcProduct;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Models\User\Users;
 
 class OrderRepository
 {
@@ -61,14 +62,13 @@ class OrderRepository
             $query->where('zone', $searchByZone);
         }
 
-        $data = $query->paginate($length);
+        $data = $query->orderBy('zone', 'desc')->paginate($length);
         $columns = [
             ['width' => '33%', 'label' => 'Дата заказа',  'name' => 'created_at'],
             ['width' => '33%', 'label' => 'Id', 'name' => 'id'],
             ['width' => '33%', 'label' => 'Статус', 'name' => 'order_status'],
             ['width' => '33%', 'label' => 'Имя', 'name' => 'name'],
             ['width' => '33%', 'label' => 'Телефон', 'name' => 'phone'],
-            ['width' => '33%', 'label' => 'Почта', 'name' => 'email'],
             ['width' => '33%', 'label' => 'Сумма заказа', 'name' => 'total_price'],
             ['width' => '33%', 'label' => 'Комментарий', 'name' => 'comment'],
         ];
@@ -80,6 +80,17 @@ class OrderRepository
 
         $sortKey = 'id';
 
+
+        $green = clone $query;
+        $white = clone $query;
+        $red = clone $query;
+        $black = clone $query;
+
+        $white = $white->where('zone', 'white')->count();
+        $red = $red->where('zone', 'red')->count();
+        $green = $green->where('zone', 'green')->count();
+        $black = $black->where('zone', 'black')->count();
+
         return [
             'data' => $data,
             'columns' => $columns,
@@ -87,10 +98,11 @@ class OrderRepository
             'sortKey' => $sortKey,
             'draw' => $request->input('draw'),
             'stats' => [
-                'total' => $this->order->where('created_at', 'LIKE', date('Y-m').'%')->count(),
-                'white' => $this->order->where('zone', 'white')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
-                'yellow' => $this->order->where('zone', 'yellow')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
-                'red' => $this->order->where('zone', 'red')->where('created_at', 'LIKE', date('Y-m').'%')->count(),
+                'total' => Order::count(),
+                'white' => $white,
+                'red' => $red,
+                'green' => $green,
+                'black' => $black
             ]
         ];
     }
@@ -163,6 +175,9 @@ class OrderRepository
             $products[] = OcProduct::with('description')->where('product_id', $id)->first();
         }
         $order->product_id = $products ?? [];
+
+        $order['buyer'] = Users::where('phone', $order->phone)->first();
+
         return $order;
     }
 

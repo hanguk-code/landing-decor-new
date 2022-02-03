@@ -174,4 +174,39 @@ class OrderController extends Controller
 
         return new JResource($response);
     }
+
+    public function setZone(Request $request, $id) {
+        $query = Order::where('id', $id);
+        $order = $query->first();
+        $products = unserialize($order->product_id);
+
+        if($request->zone === "white") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'yellow']);
+            }
+        }
+
+        if($request->zone === "green") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'black']);
+            }
+        }
+
+        if($request->zone === "black") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'white']);
+            }
+            Users::where('phone', $order->phone)->update(['status' => 'blacklist']);
+        }
+
+        $query->update(['zone' => $request->zone]);
+
+        return new JResource(['status' => 'success']);
+    }
+
+
+    public function count(Request $request) {
+
+        return Order::where('zone', 'red')->count();
+    }
 }
