@@ -441,7 +441,10 @@ class ProductRepository
                     'name' => $subItem['description']['name'],
                     'image_url' => $subItem['image'],
                     'url' => $totalUrl,
-                    'seo_text' => $subItem['seo_text']
+                    'seo_text' => $subItem['seo_text'],
+                    'meta_keyword' => $subItem['description']['meta_keyword'],
+                    'meta_description' => $subItem['description']['meta_description'],
+                    'seo_title' => $subItem['description']['seo_title']
                 ];
 
 
@@ -520,7 +523,10 @@ class ProductRepository
                 'name' => $category['description']['name'],
                 'image_url' => $category['image'],
                 'url' => $urlAliasCat['keyword'],
-                'seo_text' => $category['seo_text']
+                'seo_text' => $category['seo_text'],
+                'meta_keyword' => $category['description']['meta_keyword'],
+                'meta_description' => $category['description']['meta_description'],
+                'seo_title' => $category['description']['seo_title']
             ];
 
             $priceLimit = Cache::remember('price_limit__' . $category['category_id'], 60, function () use ($category) {

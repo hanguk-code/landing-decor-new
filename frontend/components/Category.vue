@@ -187,7 +187,23 @@ export default {
         'min_price',
         'max_price',
     ],
-
+    head() {
+        return {
+            title: this.category.seo_title,
+            meta: [
+                {
+                    hid: 'description',
+                    name: 'description',
+                    content: this.category.meta_description
+                },
+                {
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: this.category.meta_keyword
+                }
+            ],
+        }
+    },
     data() {
         return {
             rangeValue: [this.min_price, this.max_price],
