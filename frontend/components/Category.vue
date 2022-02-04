@@ -215,6 +215,10 @@ export default {
             query: [],
             mainCat: '',
             showChildren: 'display: block;',
+
+            short_seo_text: '',
+            full_seo_text: '',
+            visible_full_seo_text: false
         };
     },
 
@@ -227,6 +231,12 @@ export default {
             this.mainCat = splitUrl[1]
         }
         await this.setStatistic();
+
+
+        this.full_seo_text = this.category.seo_text;
+        this.short_seo_text = this.category.seo_text;
+        console.log(this.full_seo_text, this.short_seo_text)
+
     },
 
     mounted() {

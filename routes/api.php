@@ -62,6 +62,8 @@ Route::get('adm/orders/options/data', 'OrderController@optionsData');
 Route::post('adm/orders/delete/checked', 'OrderController@deleteChecked');
 Route::get('adm/orders/{order_id}/set-status', 'OrderController@setStatus');
 
+Route::patch('adm/orders/{id}/set-zone', 'OrderController@setZone');
+
 Route::apiResource('adm/media', 'MediaController');
 Route::post('adm/media/sort', 'MediaController@sort');
 Route::delete('adm/media/delete-gallery/{id}', 'MediaController@deleteGallery');
@@ -101,3 +103,4 @@ Route::get('adm/finances/articles/{id}/delete', 'FinanceController@deleteArticle
 Route::get('adm/finances/expenses/{id}/delete', 'FinanceController@deleteExpense');
 
 Route::get('adm/finances/orders/get', 'FinanceController@getOrders');
+Route::get('adm/statistic/get-orders', 'OrderController@count');

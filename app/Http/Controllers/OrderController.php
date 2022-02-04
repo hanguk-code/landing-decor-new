@@ -131,8 +131,8 @@ class OrderController extends Controller
             'type' => $data->type,
             'address' => $data->address,
             'tags' => $data->tags,
-            'created_at' => $data->date
-
+            'created_at' => $data->date,
+            'zone' => 'red'
         ]);
         Orders::create([
             'product_id' => $id,
@@ -173,5 +173,40 @@ class OrderController extends Controller
         $response = $this->orderRepository->edit((object) $request->all(), $id);
 
         return new JResource($response);
+    }
+
+    public function setZone(Request $request, $id) {
+        $query = Order::where('id', $id);
+        $order = $query->first();
+        $products = unserialize($order->product_id);
+
+        if($request->zone === "white") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'yellow']);
+            }
+        }
+
+        if($request->zone === "green") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'black']);
+            }
+        }
+
+        if($request->zone === "black") {
+            foreach($products as $key => $id) {
+                OcProduct::where('product_id', $id)->update(['zone' => 'white']);
+            }
+            Users::where('phone', $order->phone)->update(['status' => 'blacklist']);
+        }
+
+        $query->update(['zone' => $request->zone]);
+
+        return new JResource(['status' => 'success']);
+    }
+
+
+    public function count(Request $request) {
+
+        return Order::where('zone', 'red')->count();
     }
 }

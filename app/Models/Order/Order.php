@@ -25,7 +25,8 @@ class Order extends Model
         'total_price',
         'zone',
         'created_at',
-        'address'
+        'address',
+        'amount_of_discount'
     ];
 
 }

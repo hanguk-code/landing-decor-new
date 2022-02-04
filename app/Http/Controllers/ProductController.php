@@ -138,5 +138,7 @@ class ProductController extends Controller
         return (new JResource(['status' => 'success']));
     }
 
+    
+
 }
 
