@@ -169,7 +169,7 @@
                         </div>
                     </div>
 
-                    <div v-html="category.seo_text"> TEEEEEEEEST</div>
+                    <div v-html="category.seo_text"></div>
 
                     <div
                         v-observe-visibility="currentPage !== lastPage ? visibilityChanged : false"

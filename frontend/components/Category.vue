@@ -157,8 +157,11 @@
                     </div>
 
 
-                    <div v-html="category.seo_text"></div>
 
+                    <div class="tags-container">
+                        <div v-html="category.seo_text" :class="{'truncate-text': !visible_full_seo_text}"></div>
+                        <a href="#" class="readmore-link" @click="visible_full_seo_text = true" v-if="!visible_full_seo_text">Читать далее</a>
+                    </div>
 
                     <div v-observe-visibility="currentPage !== lastPage ? visibilityChanged : false"></div>
 
@@ -235,7 +238,7 @@ export default {
 
         this.full_seo_text = this.category.seo_text;
         this.short_seo_text = this.category.seo_text;
-        console.log(this.full_seo_text, this.short_seo_text)
+        console.log(this.short_seo_text)
 
     },
 
@@ -309,5 +312,19 @@ export default {
         display: block;
         left: 135px;
         top: 130px;
+    }
+
+    .truncate-text {
+        height: 170px;
+        background: transparent;
+        padding: 1rem;
+        overflow: hidden;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .readmore-link {
+        margin-top: 10px;
+        margin-left: 10px;
     }
 </style>

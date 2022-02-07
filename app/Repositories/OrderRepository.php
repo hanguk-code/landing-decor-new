@@ -178,7 +178,6 @@ class OrderRepository
 
         $order['buyer'] = Users::where('phone', $order->phone)->first();
 
-        return $products;
         return $order;
     }
 
@@ -285,13 +284,13 @@ class OrderRepository
 
 
     public function edit($request, $order_id) {
-
+        $products = serialize($request->products);
         $order = $this->order->where('id', $order_id)->update([
             'name' => $request->order['name'],
             'phone' => $request->order['phone'],
             'email' => $request->order['email'],
             'comment' => $request->order['comment'],
-            'product_id' => serialize($request->products)
+            'product_id' => $products
         ]);
         return ['status' => 'success'];
     }
