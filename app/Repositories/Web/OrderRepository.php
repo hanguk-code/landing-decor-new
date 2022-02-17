@@ -71,7 +71,8 @@ class OrderRepository
             'phone' => $request['userForm']['phoneDetails']['formattedNumber'],
             'email' => $request['userForm']['email'],
             'comment' => $request['userForm']['comment'],
-            'total_price' => $total_price
+            'total_price' => $total_price,
+            'zone' => 'red'
         ]);
 
 

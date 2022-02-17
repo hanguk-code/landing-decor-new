@@ -121,6 +121,7 @@ class ProductRepository
             $query = $query->orderBy('sku', 'desc');
         }
 
+        $total = clone $query;
         $green = clone $query;
         $blue = clone $query;
         $white = clone $query;
@@ -133,7 +134,7 @@ class ProductRepository
 
         $price = clone $query;
 
-        $total = $query->count();
+        $total = $total->count();
         $total_price_all_products = number_format($price->whereNotIn('zone', ['black'])->sum('price'));
         $price_rub_all_products = number_format($price->whereNotIn('zone', ['black'])->sum('price_rub'));
         $red = $red->where('zone', 'red')->count();

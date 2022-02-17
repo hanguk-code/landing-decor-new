@@ -1,7 +1,7 @@
 <h1>Заказ № {{ $iddata }}</h1>
 <p>Заказчик: {{ $fields['userForm']['name'] }}</p>
 <p>Телефон:
-	<a href="tel:{{ $fields['userForm']['phone'] }}">{{ $fields['userForm']['phone'] }}</a></p>
+	<a href="tel:{{ $fields['userForm']['phoneDetails']['formattedNumber'] }}">{{ $fields['userForm']['phoneDetails']['formattedNumber'] }}</a></p>
 <p>Почта:
 	<a href="mailto:{{ $fields['userForm']['email'] }}">{{ $fields['userForm']['email'] }}</a></p>
 <p>Комментарий:

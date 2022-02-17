@@ -65,7 +65,7 @@ class OrderRepository
         $data = $query->orderBy('zone', 'desc')->paginate($length);
         $columns = [
             ['width' => '33%', 'label' => 'Дата заказа',  'name' => 'created_at'],
-            ['width' => '33%', 'label' => 'Id', 'name' => 'id'],
+            ['width' => '33%', 'label' => 'Номер заказ', 'name' => 'id'],
             ['width' => '33%', 'label' => 'Статус', 'name' => 'order_status'],
             ['width' => '33%', 'label' => 'Имя', 'name' => 'name'],
             ['width' => '33%', 'label' => 'Телефон', 'name' => 'phone'],
