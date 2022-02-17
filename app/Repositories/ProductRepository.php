@@ -123,7 +123,7 @@ class ProductRepository
 
         $total = clone $query;
         $green = clone $query;
-        $blue = clone $query;
+        $blue = $this->product;
         $white = clone $query;
         $red = clone $query;
         $siniy = clone $query;
