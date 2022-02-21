@@ -111,6 +111,9 @@ class ProductRepository
         }
 
         if (isset($searchByZone) || !empty($searchByZone)) {
+            if($searchByZone == "black") {
+                $query = $query->where('date_modified', 'LIKE', date('Y-m').'%');
+            }
             $query = $query->where('zone', $searchByZone);
         }
 

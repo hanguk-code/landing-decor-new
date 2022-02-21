@@ -139,7 +139,6 @@ class OrderRepository
         $data = $query->paginate($length);
         $columns = [
             ['width' => '33%', 'label' => 'Id', 'name' => 'id'],
-            ['width' => '33%', 'label' => 'Номер заказа', 'name' => 'order_id'],
             ['width' => '33%', 'label' => 'Имя', 'name' => 'name'],
             ['width' => '33%', 'label' => 'Телефон', 'name' => 'phone'],
             ['width' => '33%', 'label' => 'Почта', 'name' => 'email'],
@@ -167,7 +166,7 @@ class OrderRepository
 
 
 
-    public function find(int $orderId)
+    public function find($orderId)
     {
         $order = $this->order->where('id', $orderId)->first();
         $ids = unserialize($order->product_id);

@@ -72,7 +72,8 @@ class OrderRepository
             'email' => $request['userForm']['email'],
             'comment' => $request['userForm']['comment'],
             'total_price' => $total_price,
-            'zone' => 'red'
+            'zone' => 'red',
+            'date_added' => date('Y-m-d H:i:s')
         ]);
 
 

@@ -252,7 +252,13 @@ class UserRepository
     public function getUserOrders($request, $user_id)
     {
         $user = Users::where('id', $user_id)->first();
-        $data = Order::where('phone', $user->phone)->get();
+        $data = Order::where('phone', $user->phone);
+        if(isset($request->search_by_date) && !empty($request->search_by_date)) {
+            $data->where('created_at', 'LIKE', $request->search_by_date.'%');
+        }
+        $data = $data->get();
+
+
         foreach ($data as $key => $value) {
             $pids = unserialize($value['product_id']);
             $data[$key]['product_id'] = OcProduct::whereIn('product_id', $pids)->get();
@@ -265,9 +271,13 @@ class UserRepository
     {
         $request = (object) $request;
         Users::where('id', $user_id)->update([
+            'name' => $request->user['name'],
             'phone' => $request->user['phone'],
             'email' => $request->user['email'],
             'address' => $request->user['address'],
+            'address2' => isset($request->user['address2']) ? $request->user['address2'] : null,
+            'address3' => isset($request->user['address3']) ? $request->user['address3'] : null,
+            'address4' => isset($request->user['address4']) ? $request->user['address4'] : null,
             'tags' => $request->user['tags'],
             'status' => $request->user['status'],
             'comments' => $request->user['comments']
