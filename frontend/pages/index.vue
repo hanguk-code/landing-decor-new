@@ -9,15 +9,6 @@
             <div class="row">
                 <div class="col-sm-4 col-md-12 col-lg-3">
                     <LeftMenu/>
-                    <div id="seo-links" v-if="articles">
-                        <h4 class="articles-title">Статьи</h4>
-                        <div v-for="article in articles" :key="article.id">
-                            <div>
-                                <n-link :to="{name: 'articles-id', params: {id: article.id }}">{{ article.seo_title }}</n-link>
-                            </div>
-                            <div>&nbsp;</div>
-                        </div>
-                    </div>
                     <div class="left-news">
                         <h2>Новинки</h2>
                         <div class="product" v-for="product in newProducts">
@@ -49,7 +40,7 @@
                         Показать весь ассортимент товара
                     </n-link>
                     <div class="catalog">
-                        <n-link :to="cat.url" class="catalog__card" v-for="cat in categories" :key="cat.name">
+                        <n-link :to="cat.url" class="catalog__card" v-for="cat in categories">
                             <div class="catalog__image">
                                 <img :src="apiWebUrl + '/image/' + cat.image_url" :alt="cat.name">
                             </div>
@@ -139,14 +130,14 @@
 </template>
 
 <script>
-    import {isMobileOnly} from 'mobile-device-detect';
-    import MenuMobile from '~/components/Menu/MenuMobile'
-    import Menu from '~/components/Menu/Menu'
-    import LeftMenu from "~/components/Menu/LeftMenu";
-    import Vector from "~/components/Partials/Vector";
-    import {mapGetters} from "vuex";
+import {isMobileOnly} from 'mobile-device-detect';
+import MenuMobile from '~/components/Menu/MenuMobile'
+import Menu from '~/components/Menu/Menu'
+import LeftMenu from "~/components/Menu/LeftMenu";
+import Vector from "~/components/Partials/Vector";
+import {mapGetters} from "vuex";
 
-    export default {
+export default {
     components: {
         LeftMenu,
         MenuMobile,
@@ -175,8 +166,7 @@
             showImage: true,
             readMoreActivated: false,
 
-            apiWebUrl: process.env.apiWebUrl,
-            articles: []
+            apiWebUrl: process.env.apiWebUrl
         };
     },
 
@@ -185,7 +175,6 @@
         if (this.newProducts.length) {
             this.zoom_01()
         }
-        await this.getArticles()
     },
 
     mounted() {
@@ -195,13 +184,6 @@
     },
 
     methods: {
-        async getArticles() {
-            const response = await this.$axios.get(`http://139.162.135.193/api/adm/articles/get`);
-            if(response.data.articles) {
-                this.articles = response.data.articles
-            }
-        },
-
         zoom_01() {
             if (!this.isMobile) {
                 $('.zoomContainer').remove()
@@ -236,10 +218,5 @@
 </script>
 
 <style scoped>
-    .articles-title {
-        font-size: 22px;
-        color: #ecd7ba;
-        font-weight: bold;
-        padding: 10px 0 10px 23px;
-    }
+
 </style>

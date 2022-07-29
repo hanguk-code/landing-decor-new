@@ -23,7 +23,6 @@
                 </ul>
             </li>
         </ul>
-
     </div>
 </template>
 

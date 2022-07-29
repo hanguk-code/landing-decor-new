@@ -87,12 +87,7 @@ class FinanceController extends Controller
 
         $data = [];
 
-        if(isset($request->search_by_date) && !empty($request->search_by_date)) {
-            $data = Order::where('created_at', 'LIKE', $request->search_by_date."%")->get();
-        } else {
-            $data = Order::get();
-        }
-
+        $data = Order::where('created_at', 'LIKE', "%".date('Y-m')."%")->get();
         $expense = FinanceExpenses::sum('amount');
         $total_sum = 0;
         $income = 0;

@@ -154,7 +154,7 @@ export default {
     methods: {
         async setStatistic() {
             let days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
-            this.$axios.post(process.env.apiWebUrl + `/adm/statistic/set`, {
+            this.$axios.post(`https://decor-retro.ru/api/adm/statistic/set`, {
                 type: "product",
                 product_id: this.product.id,
                 price: this.product.price,

@@ -163,7 +163,7 @@ class AreaController extends Controller
     public function setStatistic(Request $request)
     {
         $data = (object)$request->all();
-        BrowsingHistory::create([
+        $stat = BrowsingHistory::create([
             "type" => $data->type,
             "category" => isset($data->category) ? $data->category : null,
             "product_id" => isset($data->product_id) ? $data->product_id : null,

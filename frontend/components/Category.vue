@@ -249,7 +249,7 @@ export default {
     methods: {
         async setStatistic() {
             let days = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
-            this.$axios.post(process.env.apiWebUrl + `/adm/statistic/set`, {
+            this.$axios.post(`https://decor-retro.ru/api/adm/statistic/set`, {
                 type: "category",
                 category: this.breadcrumbs[(this.breadcrumbs).length - 1].name,
                 date_viewed: days[(new Date()).getDay()],

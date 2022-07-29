@@ -132,8 +132,7 @@ class OrderController extends Controller
             'address' => $data->address,
             'tags' => $data->tags,
             'created_at' => $data->date,
-            'zone' => 'red',
-            'date_added' => date('Y-m-d H:i:s')
+            'zone' => 'red'
         ]);
         Orders::create([
             'product_id' => $id,

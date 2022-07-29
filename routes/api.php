@@ -104,12 +104,3 @@ Route::get('adm/finances/expenses/{id}/delete', 'FinanceController@deleteExpense
 
 Route::get('adm/finances/orders/get', 'FinanceController@getOrders');
 Route::get('adm/statistic/get-orders', 'OrderController@count');
-
-
-Route::get('adm/articles/get', 'ArticleController@articles');
-Route::get('adm/articles/get', 'ArticleController@articles');
-Route::get('adm/articles/{id}/delete', 'ArticleController@deleteArticle');
-Route::get('adm/articles/get/{id}', 'ArticleController@getArticle');
-Route::get('adm/articles/{id}', 'ArticleController@article');
-
-Route::patch('adm/articles/{category_id}/update', 'ArticleController@updateArticle');
